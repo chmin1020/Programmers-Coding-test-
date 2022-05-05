@@ -13,10 +13,6 @@ class Solution {
     int[] dirX = {1, -1, 0, 0};
     int[] dirY = {0, 0, 1, -1};
     
-    public int getDis(Pos n1, Pos n2){
-        return Math.abs(n1.x - n2.x) + Math.abs(n1.y - n2.y);
-    }
-    
     public int[] solution(String[][] places) {
         int[] answer = new int[places.length];
         Queue<Pos> qu = new LinkedList<Pos>();
@@ -34,10 +30,9 @@ class Solution {
                         visited[j][k] = true;
                         while(!qu.isEmpty()){
                             Pos cur = qu.poll();
-                            int dis = getDis(start, cur);
-                            if((cur.x != start.x || cur.y != start.y) 
+                           if((cur.x != start.x || cur.y != start.y) 
                                && places[i][cur.x].charAt(cur.y) == 'P' 
-                               && dis <= 2 && cur.d <= 2){
+                               && cur.d <= 2){
                                 no = true;
                                 break;
                             }
