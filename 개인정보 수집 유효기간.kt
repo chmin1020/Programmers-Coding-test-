@@ -4,13 +4,18 @@ class Solution {
         originalDate[1] += termMonth
         originalDate[2]--
 
-        if(originalDate[2] <= 0){
+        if(originalDate[2] <= 0){ //일 더하기
             originalDate[2] += 28
             originalDate[1]--
         }
-        if(originalDate[1] > 12){
-            originalDate[0] += (originalDate[1] / 12)
-            originalDate[1] %= 12
+        if(originalDate[1] > 12){ //달, 년 더하기
+            var cnt = 0
+            while (originalDate[1] > 12){
+                originalDate[1] -= 12
+                cnt++
+            }
+            
+            originalDate[0] += cnt
         }
 
         return originalDate
