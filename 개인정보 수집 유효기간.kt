@@ -9,8 +9,8 @@ class Solution {
             originalDate[1]--
         }
         if(originalDate[1] > 12){
-            originalDate[1] -= 12
-            originalDate[0]++
+            originalDate[0] += (originalDate[1] / 12)
+            originalDate[1] %= 12
         }
 
         return originalDate
