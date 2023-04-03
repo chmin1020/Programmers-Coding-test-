@@ -1,0 +1,17 @@
+-- 각 아이디와 댓글 수를 매핑한 임시 테이블
+WITH count_table as (
+    SELECT MEMBER_ID, count(*) AS TOTAL
+    FROM REST_REVIEW
+    GROUP BY MEMBER_ID 
+)
+
+SELECT mp.MEMBER_NAME, rr.REVIEW_TEXT, date_format(rr.REVIEW_DATE, "%Y-%m-%d") AS REVIEW_DATE
+FROM MEMBER_PROFILE mp JOIN REST_REVIEW rr
+ON mp.MEMBER_ID = rr.MEMBER_ID
+WHERE mp.MEMBER_ID IN (
+    SELECT MEMBER_ID
+    FROM count_table
+    WHERE TOTAL = (SELECT max(TOTAL) FROM count_table)
+)
+ORDER BY rr.REVIEW_DATE, rr.REVIEW_TEXT
+
