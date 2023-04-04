@@ -1,0 +1,29 @@
+-- 코드를 입력하세요
+
+-- 각 car_id 30일 대여 가격
+WITH SATISFY_PRICE_LIST AS (
+    SELECT crcc.CAR_ID, crcc.CAR_TYPE, 30 * ( floor(((100 - crcdp.DISCOUNT_RATE)/100) * crcc.DAILY_FEE)) AS FEE
+    FROM CAR_RENTAL_COMPANY_CAR crcc JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN crcdp
+    ON crcc.CAR_TYPE = crcdp.CAR_TYPE
+    WHERE crcdp.DURATION_TYPE = '30일 이상'
+)
+-- 기간 내 빌릴 수 있는 car_id
+,SATISFY_CAR_LIST AS (
+    SELECT CAR_ID
+    FROM CAR_RENTAL_COMPANY_CAR
+    WHERE CAR_TYPE IN ('세단', 'SUV')
+        AND CAR_ID NOT IN( 
+            SELECT CAR_ID
+            FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+            WHERE DATE_FORMAT(START_DATE,'%y%m%d') between '221101' and '221130'
+                or DATE_FORMAT(END_DATE,'%y%m%d') between '221101' and '221130'
+                or (DATE_FORMAT(START_DATE,'%y%m%d') < '221101' and DATE_FORMAT(END_DATE,'%y%m%d') > '221130')
+        ) 
+)
+
+-- SELECT 문 
+SELECT scl.CAR_ID, spl.CAR_TYPE, spl.FEE
+FROM SATISFY_CAR_LIST scl JOIN SATISFY_PRICE_LIST spl
+ON scl.CAR_ID = spl.CAR_ID
+WHERE (FEE >= 500000 AND FEE < 2000000)
+ORDER BY FEE DESC, CAR_TYPE ASC, CAR_ID DESC
